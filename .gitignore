@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.log
+
+# Environment
+.env
+*.env.local
+
+# Node / Frontend
+node_modules/
+src/fe/dist/
+src/fe/.vite/
+src/fe/node_modules/
+
+# Qdrant persisted volume
+data/qdrant/
+
+# Uploaded documents (user data)
+documents/uploads/
+
+# Index run artifacts
+data/index_runs/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.whl
+*.tar.gz
