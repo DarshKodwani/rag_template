@@ -122,9 +122,61 @@ class TestQdrantStore:
 
         mock_client.delete.assert_called_once()
 
+    def test_delete_by_doc_id_handles_exception(self):
+        store, mock_client = self._make_store_and_mock()
+        mock_client.delete.side_effect = Exception("collection not found")
+
+        # Should not raise — exception is silently caught
+        store.delete_by_doc_id("doc1")
+
     def test_healthcheck_calls_get_collections(self):
         store, mock_client = self._make_store_and_mock()
 
         store.healthcheck()
 
         mock_client.get_collections.assert_called_once()
+
+    def test_search_with_filter(self):
+        store, mock_client = self._make_store_and_mock()
+
+        mock_point = MagicMock()
+        mock_point.payload = {"chunk_id": "abc", "doc_name": "d.pdf", "text": "t"}
+        mock_point.id = 1
+        mock_response = MagicMock()
+        mock_response.points = [mock_point]
+        mock_client.query_points.return_value = mock_response
+
+        filter_dict = {"must": [{"key": "doc_id", "match": {"value": "doc1"}}]}
+        results = store.search([0.1], top_k=3, filter=filter_dict)
+
+        assert len(results) == 1
+        # Verify filter was passed
+        call_kwargs = mock_client.query_points.call_args[1]
+        assert call_kwargs["query_filter"] is not None
+
+    def test_search_empty_payload(self):
+        store, mock_client = self._make_store_and_mock()
+
+        mock_point = MagicMock()
+        mock_point.payload = None
+        mock_point.id = 99
+        mock_response = MagicMock()
+        mock_response.points = [mock_point]
+        mock_client.query_points.return_value = mock_response
+
+        results = store.search([0.1], top_k=1, filter=None)
+
+        assert len(results) == 1
+        payload, chunk_id = results[0]
+        assert payload == {}
+        assert chunk_id == "99"
+
+    def test_upsert_large_batch_splits(self):
+        store, mock_client = self._make_store_and_mock()
+        chunks = [_make_chunk(i) for i in range(10)]
+        vectors = [[0.1] * 4 for _ in range(10)]
+
+        store.upsert(chunks, vectors, batch_size=3)
+
+        # 10 items with batch_size=3 → 4 calls (3+3+3+1)
+        assert mock_client.upsert.call_count == 4

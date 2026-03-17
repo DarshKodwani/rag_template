@@ -1,8 +1,10 @@
 """Tests for chunking.py — no external dependencies required."""
 from __future__ import annotations
 
+import json
 import pytest
-from app.rag.chunking import chunk_text, iter_chunks_with_offsets
+from pathlib import Path
+from app.rag.chunking import chunk_text, iter_chunks_with_offsets, check_complex_doc
 
 
 class TestChunkText:
@@ -65,3 +67,40 @@ class TestIterChunksWithOffsets:
     def test_empty_text_yields_nothing(self):
         result = list(iter_chunks_with_offsets(""))
         assert result == []
+
+
+class TestCheckComplexDoc:
+    def test_no_issues_does_nothing(self, tmp_path):
+        """Short document with even paragraphs — no warnings."""
+        text = "Short text."
+        paragraphs = ["Short text."]
+        check_complex_doc("doc1", text, paragraphs, tmp_path)
+        runs_dir = tmp_path / "index_runs"
+        assert not runs_dir.exists()
+
+    def test_long_document_creates_artifact(self, tmp_path):
+        text = "x" * 250_000
+        paragraphs = [text]
+        check_complex_doc("longdoc", text, paragraphs, tmp_path)
+        artifact = tmp_path / "index_runs" / "longdoc.json"
+        assert artifact.exists()
+        data = json.loads(artifact.read_text())
+        assert "very long" in data["suggestions"][0].lower()
+
+    def test_uneven_paragraphs_creates_artifact(self, tmp_path):
+        short = "Hi."
+        long_para = "word " * 1000
+        text = short + "\n" + long_para
+        paragraphs = [short, long_para]
+        check_complex_doc("uneven", text, paragraphs, tmp_path)
+        artifact = tmp_path / "index_runs" / "uneven.json"
+        assert artifact.exists()
+        data = json.loads(artifact.read_text())
+        assert any("uneven" in s.lower() for s in data["suggestions"])
+
+    def test_single_paragraph_no_ratio_issue(self, tmp_path):
+        text = "Only one paragraph here."
+        paragraphs = ["Only one paragraph here."]
+        check_complex_doc("single", text, paragraphs, tmp_path)
+        runs_dir = tmp_path / "index_runs"
+        assert not runs_dir.exists()

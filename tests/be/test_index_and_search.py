@@ -14,6 +14,17 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from app.core.models import Chunk
+from app.rag.indexing import (
+    _doc_id,
+    _chunk_id,
+    _get_embedding_client,
+    _embed,
+    _load_file,
+    _build_chunks,
+    _index_chunks,
+    index_file,
+    index_directory,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -118,6 +129,221 @@ class TestIndexFileUnit:
         result = index_file(doc, settings)
         assert result.status == "error"
         assert any("OpenAI/Azure" in e for e in result.errors)
+
+
+# ---------------------------------------------------------------------------
+# Helpers / _embed / _get_embedding_client / _load_file
+# ---------------------------------------------------------------------------
+
+
+class TestHelpers:
+    def test_doc_id_is_deterministic(self):
+        p = Path("/tmp/test.pdf")
+        assert _doc_id(p) == _doc_id(p)
+
+    def test_chunk_id_is_deterministic(self):
+        assert _chunk_id("doc1", 0) == _chunk_id("doc1", 0)
+
+    def test_chunk_id_different_for_different_index(self):
+        assert _chunk_id("doc1", 0) != _chunk_id("doc1", 1)
+
+
+class TestGetEmbeddingClient:
+    def test_azure_client(self):
+        settings = _fake_settings(Path("/tmp"))
+        settings.azure_keys_present = True
+        with patch("openai.AzureOpenAI") as mock_azure:
+            _get_embedding_client(settings)
+            mock_azure.assert_called_once()
+
+    def test_openai_client(self):
+        settings = _fake_settings(Path("/tmp"))
+        settings.azure_keys_present = False
+        with patch("openai.OpenAI") as mock_openai:
+            _get_embedding_client(settings)
+            mock_openai.assert_called_once()
+
+
+class TestEmbed:
+    def test_embed_single_batch(self):
+        settings = _fake_settings(Path("/tmp"))
+        settings.azure_keys_present = False
+
+        mock_item = MagicMock()
+        mock_item.embedding = [0.1, 0.2]
+        mock_response = MagicMock()
+        mock_response.data = [mock_item, mock_item]
+
+        mock_client = MagicMock()
+        mock_client.embeddings.create.return_value = mock_response
+
+        with patch("app.rag.indexing._get_embedding_client", return_value=mock_client):
+            result = _embed(["text1", "text2"], settings)
+
+        assert len(result) == 2
+
+    def test_embed_multiple_batches(self):
+        settings = _fake_settings(Path("/tmp"))
+        settings.azure_keys_present = False
+
+        mock_item = MagicMock()
+        mock_item.embedding = [0.1]
+        mock_response = MagicMock()
+        mock_response.data = [mock_item]
+
+        mock_client = MagicMock()
+        mock_client.embeddings.create.return_value = mock_response
+
+        with patch("app.rag.indexing._get_embedding_client", return_value=mock_client):
+            result = _embed(["t1", "t2", "t3"], settings, batch_size=1)
+
+        assert len(result) == 3
+        assert mock_client.embeddings.create.call_count == 3
+
+    def test_embed_uses_azure_model(self):
+        settings = _fake_settings(Path("/tmp"))
+        settings.azure_keys_present = True
+
+        mock_item = MagicMock()
+        mock_item.embedding = [0.1]
+        mock_response = MagicMock()
+        mock_response.data = [mock_item]
+
+        mock_client = MagicMock()
+        mock_client.embeddings.create.return_value = mock_response
+
+        with patch("app.rag.indexing._get_embedding_client", return_value=mock_client):
+            _embed(["text"], settings)
+
+        call_kwargs = mock_client.embeddings.create.call_args[1]
+        assert call_kwargs["model"] == "text-embedding-3-small"
+
+
+class TestLoadFile:
+    def test_load_pdf_file(self, tmp_path):
+        pdf_path = tmp_path / "test.pdf"
+        pdf_path.touch()
+        with patch("app.loaders.pdf_loader.load_pdf", return_value=("pdf text", [{"page": 1, "start_offset": 0, "end_offset": 8}])):
+            text, meta = _load_file(pdf_path)
+        assert text == "pdf text"
+
+    def test_load_docx_file(self, tmp_path):
+        docx_path = tmp_path / "test.docx"
+        docx_path.touch()
+        with patch("app.loaders.docx_loader.load_docx", return_value=("docx text", [])):
+            text, meta = _load_file(docx_path)
+        assert text == "docx text"
+
+    def test_load_txt_file(self, tmp_path):
+        txt_path = tmp_path / "test.txt"
+        txt_path.write_text("hello")
+        text, meta = _load_file(txt_path)
+        assert text == "hello"
+
+
+class TestBuildChunks:
+    def test_empty_file_returns_empty(self, tmp_path):
+        f = tmp_path / "empty.txt"
+        f.write_text("")
+        settings = _fake_settings(tmp_path)
+        chunks = _build_chunks(f, "empty.txt", "doc1", settings)
+        assert chunks == []
+
+    def test_builds_chunks_with_metadata(self, tmp_path):
+        f = tmp_path / "test.txt"
+        f.write_text("Some text for chunking. " * 20)
+        settings = _fake_settings(tmp_path)
+        chunks = _build_chunks(f, "test.txt", "doc1", settings)
+        assert len(chunks) > 0
+        assert chunks[0].doc_name == "test.txt"
+
+
+class TestIndexChunks:
+    def test_empty_chunks_does_nothing(self):
+        settings = _fake_settings(Path("/tmp"))
+        with patch("app.rag.indexing.QdrantStore") as mock_store_cls:
+            _index_chunks([], settings)
+            mock_store_cls.assert_not_called()
+
+
+class TestIndexFileCoverage:
+    def test_rel_path_fallback_on_value_error(self, tmp_path):
+        """When path is not relative to docs_dir.parent, use path.name."""
+        doc = tmp_path / "sample.txt"
+        doc.write_text("test content " * 20)
+
+        settings = _fake_settings(tmp_path)
+        # Set documents_dir to a completely different path so relative_to raises
+        settings.documents_dir = Path("/completely/different/path")
+
+        fake_vector = [0.1] * 4
+        with (
+            patch("app.rag.indexing._embed", return_value=[fake_vector]),
+            patch("app.rag.indexing.QdrantStore") as mock_store_cls,
+        ):
+            mock_store = MagicMock()
+            mock_store_cls.return_value = mock_store
+            result = index_file(doc, settings)
+
+        assert result.indexed > 0
+
+    def test_index_file_exception_handling(self, tmp_path):
+        doc = tmp_path / "sample.txt"
+        doc.write_text("test content " * 20)
+
+        settings = _fake_settings(tmp_path)
+        settings.documents_dir = tmp_path
+
+        with patch("app.rag.indexing._build_chunks", side_effect=RuntimeError("chunk fail")):
+            result = index_file(doc, settings)
+
+        assert result.status == "partial"
+        assert any("chunk fail" in e for e in result.errors)
+
+
+class TestIndexDirectory:
+    def test_index_directory_success(self, tmp_path):
+        docs = tmp_path / "documents"
+        docs.mkdir()
+        (docs / "a.txt").write_text("hello world")
+        (docs / "b.txt").write_text("goodbye world")
+
+        settings = _fake_settings(tmp_path)
+        settings.documents_dir = docs
+        settings.any_keys_present = True
+
+        fake_vector = [0.1] * 4
+        with (
+            patch("app.rag.indexing._embed", return_value=[fake_vector]),
+            patch("app.rag.indexing.QdrantStore") as mock_store_cls,
+        ):
+            mock_store = MagicMock()
+            mock_store_cls.return_value = mock_store
+            result = index_directory(settings)
+
+        assert result.status == "ok"
+        assert result.indexed >= 2
+
+    def test_index_directory_no_keys(self, tmp_path):
+        settings = _fake_settings(tmp_path)
+        settings.any_keys_present = False
+
+        result = index_directory(settings)
+        assert result.status == "error"
+
+    def test_index_directory_with_errors(self, tmp_path):
+        docs = tmp_path / "documents"
+        docs.mkdir()
+        (docs / "a.txt").write_text("hello")
+
+        settings = _fake_settings(tmp_path)
+        settings.documents_dir = docs
+        settings.any_keys_present = True
+
+        with patch("app.rag.indexing._build_chunks", side_effect=RuntimeError("fail")):
+            result = index_directory(settings)
+
+        assert result.status == "partial"
 
 
 # ---------------------------------------------------------------------------

@@ -8,47 +8,50 @@ A minimal, well-engineered Retrieval-Augmented Generation (RAG) application.
 
 ## Quick Start
 
-### 1. Prerequisites
+### Prerequisites
 
 - Docker + Docker Compose
 - Python 3.11+
 - Node.js 18+
+- An Azure OpenAI (or OpenAI) API key
 
-### 2. Configure environment
+### 1. Configure environment
 
 ```bash
 cp .env.example .env
 # Edit .env and fill in your Azure OpenAI keys
 ```
 
-### 3. Start Qdrant
+### 2. Start everything
 
 ```bash
-docker compose up -d
+bash scripts/dev.sh
 ```
 
-### 4. Run the backend
+This starts Qdrant (Docker), the FastAPI backend (port 8000), and the React frontend (port 5173) in one command.
+
+**Or start each service manually:**
 
 ```bash
+# Terminal 1 – Qdrant
+docker compose up -d
+
+# Terminal 2 – Backend
 cd src/be
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 uvicorn app.main:app --reload --port 8000
-```
 
-Backend API: http://localhost:8000  
-API docs: http://localhost:8000/docs
-
-### 5. Run the frontend
-
-```bash
+# Terminal 3 – Frontend
 cd src/fe
 npm install
 npm run dev
 ```
 
-Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API docs: http://localhost:8000/docs
+- Frontend: http://localhost:5173
 
 ---
 
@@ -67,14 +70,46 @@ Type your question in the chat box. Each assistant response includes a **Sources
 ### Reindex all documents
 
 ```bash
-# Via script
 bash scripts/reindex.sh
-
-# Or directly
-curl -X POST http://localhost:8000/ingest/reindex
 ```
 
 This re-reads everything in the `documents/` directory (including `documents/uploads/`) and rebuilds the Qdrant index.
+
+---
+
+## Testing
+
+Both backend and frontend have **100% test coverage**.
+
+### Backend tests
+
+```bash
+cd src/be
+source .venv/bin/activate
+pytest ../../tests/be/ --cov=app --cov-report=term-missing
+```
+
+- **112 tests** across 13 test files
+- 100% statement coverage (519/519 statements)
+- Tests cover all API endpoints, loaders (PDF, DOCX, TXT), chunking, indexing, search, and vector store operations
+
+### Frontend tests
+
+```bash
+cd src/fe
+npm test
+```
+
+- **41 tests** across 5 test files
+- 100% coverage (statements, branches, functions, lines)
+- Tests cover all components (`ChatPanel`, `UploadPanel`, `CitationList`, `App`) and the API client
+
+To see a detailed coverage report:
+
+```bash
+cd src/fe
+npx vitest run --coverage
+```
 
 ---
 

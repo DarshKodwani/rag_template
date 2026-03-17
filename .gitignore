@@ -30,12 +30,15 @@ node_modules/
 src/fe/dist/
 src/fe/.vite/
 src/fe/node_modules/
+src/fe/coverage/
 
 # Qdrant persisted volume
 data/qdrant/
 
 # Uploaded documents (user data)
 documents/uploads/
+documents/*.pdf
+documents/*.docx
 
 # Index run artifacts
 data/index_runs/
