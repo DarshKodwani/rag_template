@@ -27,6 +27,12 @@ def _fake_settings(tmp_path: Path):
     settings.azure_openai_api_version = "2024-02-01"
     settings.azure_openai_chat_deployment = "gpt-4o"
     settings.azure_openai_embedding_deployment = "text-embedding-3-small"
+    
+    settings.openai_api_key = "fake-openai-key"
+    settings.openai_base_url = "https://api.openai.com/v1"
+    settings.openai_chat_model = "gpt-4o"
+    settings.openai_embedding_model = "text-embedding-3-small"
+
     settings.qdrant_url = os.environ.get("QDRANT_URL", "http://localhost:6333")
     settings.qdrant_collection = "test_integration"
     settings.chunk_size = 200
@@ -34,7 +40,10 @@ def _fake_settings(tmp_path: Path):
     settings.top_k = 3
     settings.documents_dir = tmp_path / "documents"
     settings.data_dir = tmp_path / "data"
+    
     settings.azure_keys_present = True
+    settings.openai_keys_present = True
+    settings.any_keys_present = True
     return settings
 
 
@@ -97,18 +106,18 @@ class TestIndexFileUnit:
 
         assert result.indexed == 0
 
-    def test_missing_azure_keys_returns_error(self, tmp_path):
+    def test_missing_keys_returns_error(self, tmp_path):
         from app.rag.indexing import index_file
 
         doc = tmp_path / "sample.txt"
         doc.write_text("hello world", encoding="utf-8")
 
         settings = _fake_settings(tmp_path)
-        settings.azure_keys_present = False
+        settings.any_keys_present = False
 
         result = index_file(doc, settings)
         assert result.status == "error"
-        assert any("Azure" in e for e in result.errors)
+        assert any("OpenAI/Azure" in e for e in result.errors)
 
 
 # ---------------------------------------------------------------------------

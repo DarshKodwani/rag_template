@@ -46,7 +46,7 @@ class QdrantStore(VectorStore):
         else:
             log.debug("Collection '%s' already exists", self._collection)
 
-    def upsert(self, chunks: list[Chunk], vectors: list[list[float]]) -> None:
+    def upsert(self, chunks: list[Chunk], vectors: list[list[float]], *, batch_size: int = 256) -> None:
         points = [
             PointStruct(
                 id=_chunk_id_to_int(chunk.chunk_id),
@@ -65,8 +65,10 @@ class QdrantStore(VectorStore):
             )
             for chunk, vector in zip(chunks, vectors)
         ]
-        self._client.upsert(collection_name=self._collection, points=points)
-        log.debug("Upserted %d points into '%s'", len(points), self._collection)
+        for i in range(0, len(points), batch_size):
+            batch = points[i : i + batch_size]
+            self._client.upsert(collection_name=self._collection, points=batch)
+            log.debug("Upserted batch %d–%d of %d points into '%s'", i, i + len(batch), len(points), self._collection)
 
     def search(
         self,
@@ -75,16 +77,16 @@ class QdrantStore(VectorStore):
         filter: Optional[dict],
     ) -> list[tuple[dict, str]]:
         qdrant_filter = Filter(**filter) if filter else None
-        results = self._client.search(
+        response = self._client.query_points(
             collection_name=self._collection,
-            query_vector=query_vector,
+            query=query_vector,
             limit=top_k,
             query_filter=qdrant_filter,
             with_payload=True,
         )
         return [
             (point.payload or {}, (point.payload or {}).get("chunk_id", str(point.id)))
-            for point in results
+            for point in response.points
         ]
 
     def delete_by_doc_id(self, doc_id: str) -> None:

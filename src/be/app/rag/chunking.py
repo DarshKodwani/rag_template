@@ -41,9 +41,9 @@ def chunk_text(
         chunks.append(text[start:end])
         if end >= length:
             break  # reached end of text — no more chunks needed
-        next_start = end - chunk_overlap
-        if next_start <= start:
-            next_start = start + 1  # avoid infinite loop on very small texts
+        # Advance by at least (chunk_size - overlap) to avoid tiny duplicate chunks
+        step = max(chunk_size - chunk_overlap, 1)
+        next_start = start + step
         start = next_start
 
     return chunks
@@ -72,9 +72,8 @@ def iter_chunks_with_offsets(
         yield text[start:end], start, end
         if end >= length:
             break  # reached end of text
-        next_start = end - chunk_overlap
-        if next_start <= start:
-            next_start = start + 1
+        step = max(chunk_size - chunk_overlap, 1)
+        next_start = start + step
         start = next_start
 
 

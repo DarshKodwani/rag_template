@@ -7,7 +7,7 @@ function App() {
     <div className="app-layout">
       <header className="app-header">
         <h1>📄 RAG Demo</h1>
-        <span className="app-subtitle">Azure OpenAI · Qdrant · FastAPI</span>
+        <span className="app-subtitle">RAG · Qdrant · FastAPI</span>
       </header>
       <main className="app-main">
         <aside className="sidebar">

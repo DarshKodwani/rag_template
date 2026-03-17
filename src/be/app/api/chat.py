@@ -16,14 +16,15 @@ router = APIRouter(tags=["chat"])
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
     settings = get_settings()
-    if not settings.azure_keys_present:
+    if not settings.any_keys_present:
         raise HTTPException(
-            status_code=503,
+            status_code=500,
             detail=(
-                "Azure OpenAI keys missing. "
-                "Set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY in .env."
+                "OpenAI/Azure API keys missing. "
+                "Set OPENAI_API_KEY or AZURE_OPENAI_API_KEY in .env."
             ),
         )
+
     try:
         return answer_query(request, settings)
     except Exception as exc:

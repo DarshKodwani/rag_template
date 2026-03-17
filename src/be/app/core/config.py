@@ -13,7 +13,7 @@ PROJECT_ROOT = _CONFIG_FILE.parents[4]
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(PROJECT_ROOT / ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     azure_openai_api_version: str = "2024-02-01"
     azure_openai_chat_deployment: str = "gpt-4o"
     azure_openai_embedding_deployment: str = "text-embedding-3-small"
+
+    # Generic OpenAI / OpenRouter
+    openai_api_key: str = ""
+    openai_base_url: str = "https://api.openai.com/v1"
+    openai_chat_model: str = "gpt-4o"
+    openai_embedding_model: str = "text-embedding-3-small"
 
     # Qdrant
     qdrant_url: str = "http://localhost:6333"
@@ -43,6 +49,14 @@ class Settings(BaseSettings):
     @property
     def azure_keys_present(self) -> bool:
         return bool(self.azure_openai_endpoint and self.azure_openai_api_key)
+
+    @property
+    def openai_keys_present(self) -> bool:
+        return bool(self.openai_api_key)
+
+    @property
+    def any_keys_present(self) -> bool:
+        return self.azure_keys_present or self.openai_keys_present
 
 
 @lru_cache

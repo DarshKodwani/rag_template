@@ -32,23 +32,34 @@ def _chunk_id(doc_id: str, index: int) -> str:
 
 
 def _get_embedding_client(settings: "Settings"):
-    """Return an AzureOpenAI client configured for embeddings."""
-    from openai import AzureOpenAI
+    """Return an OpenAI-compatible client (Azure or Generic)."""
+    from openai import AzureOpenAI, OpenAI
 
-    return AzureOpenAI(
-        azure_endpoint=settings.azure_openai_endpoint,
-        api_key=settings.azure_openai_api_key,
-        api_version=settings.azure_openai_api_version,
+    if settings.azure_keys_present:
+        return AzureOpenAI(
+            azure_endpoint=settings.azure_openai_endpoint,
+            api_key=settings.azure_openai_api_key,
+            api_version=settings.azure_openai_api_version,
+        )
+    return OpenAI(
+        api_key=settings.openai_api_key,
+        base_url=settings.openai_base_url,
     )
 
 
-def _embed(texts: list[str], settings: "Settings") -> list[list[float]]:
+def _embed(texts: list[str], settings: "Settings", *, batch_size: int = 2048) -> list[list[float]]:
     client = _get_embedding_client(settings)
-    response = client.embeddings.create(
-        input=texts,
-        model=settings.azure_openai_embedding_deployment,
+    model = (
+        settings.azure_openai_embedding_deployment
+        if settings.azure_keys_present
+        else settings.openai_embedding_model
     )
-    return [item.embedding for item in response.data]
+    all_embeddings: list[list[float]] = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i : i + batch_size]
+        response = client.embeddings.create(input=batch, model=model)
+        all_embeddings.extend(item.embedding for item in response.data)
+    return all_embeddings
 
 
 # ---------------------------------------------------------------------------
@@ -152,11 +163,11 @@ def _index_chunks(chunks: list[Chunk], settings: "Settings") -> None:
 
 def index_file(path: Path, settings: "Settings") -> IngestResponse:
     """Index a single file."""
-    if not settings.azure_keys_present:
+    if not settings.any_keys_present:
         return IngestResponse(
             status="error",
             indexed=0,
-            errors=["Azure OpenAI keys missing — cannot generate embeddings."],
+            errors=["OpenAI/Azure API keys missing — cannot generate embeddings."],
         )
 
     doc_id = _doc_id(path)
@@ -186,11 +197,11 @@ def index_file(path: Path, settings: "Settings") -> IngestResponse:
 
 def index_directory(settings: "Settings") -> IngestResponse:
     """Index all supported documents in the documents directory."""
-    if not settings.azure_keys_present:
+    if not settings.any_keys_present:
         return IngestResponse(
             status="error",
             indexed=0,
-            errors=["Azure OpenAI keys missing — cannot generate embeddings."],
+            errors=["OpenAI/Azure API keys missing — cannot generate embeddings."],
         )
 
     docs_dir = settings.documents_dir

@@ -15,7 +15,7 @@ configure_logging()
 
 app = FastAPI(
     title="RAG Demo API",
-    description="Minimal RAG application with Azure OpenAI + Qdrant",
+    description="Minimal RAG application with OpenAI/Azure + Qdrant",
     version="0.1.0",
 )
 

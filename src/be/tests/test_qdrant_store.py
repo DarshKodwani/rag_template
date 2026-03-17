@@ -103,7 +103,10 @@ class TestQdrantStore:
             "text": "hello",
         }
         mock_point.id = 1
-        mock_client.search.return_value = [mock_point]
+        
+        mock_response = MagicMock()
+        mock_response.points = [mock_point]
+        mock_client.query_points.return_value = mock_response
 
         results = store.search([0.1, 0.2], top_k=5, filter=None)
 

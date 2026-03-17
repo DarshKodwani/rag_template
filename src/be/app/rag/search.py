@@ -14,17 +14,32 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
-def _embed_query(query: str, settings: "Settings") -> list[float]:
-    from openai import AzureOpenAI
+def _get_client(settings: "Settings"):
+    """Return an OpenAI-compatible client (Azure or Generic)."""
+    from openai import AzureOpenAI, OpenAI
 
-    client = AzureOpenAI(
-        azure_endpoint=settings.azure_openai_endpoint,
-        api_key=settings.azure_openai_api_key,
-        api_version=settings.azure_openai_api_version,
+    if settings.azure_keys_present:
+        return AzureOpenAI(
+            azure_endpoint=settings.azure_openai_endpoint,
+            api_key=settings.azure_openai_api_key,
+            api_version=settings.azure_openai_api_version,
+        )
+    return OpenAI(
+        api_key=settings.openai_api_key,
+        base_url=settings.openai_base_url,
+    )
+
+
+def _embed_query(query: str, settings: "Settings") -> list[float]:
+    client = _get_client(settings)
+    model = (
+        settings.azure_openai_embedding_deployment
+        if settings.azure_keys_present
+        else settings.openai_embedding_model
     )
     response = client.embeddings.create(
         input=[query],
-        model=settings.azure_openai_embedding_deployment,
+        model=model,
     )
     return response.data[0].embedding
 
@@ -33,15 +48,14 @@ def _chat_completion(
     messages: list[dict],
     settings: "Settings",
 ) -> str:
-    from openai import AzureOpenAI
-
-    client = AzureOpenAI(
-        azure_endpoint=settings.azure_openai_endpoint,
-        api_key=settings.azure_openai_api_key,
-        api_version=settings.azure_openai_api_version,
+    client = _get_client(settings)
+    model = (
+        settings.azure_openai_chat_deployment
+        if settings.azure_keys_present
+        else settings.openai_chat_model
     )
     response = client.chat.completions.create(
-        model=settings.azure_openai_chat_deployment,
+        model=model,
         messages=messages,
         temperature=0.0,
     )
