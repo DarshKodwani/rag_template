@@ -31,5 +31,5 @@ where = ["."]
 include = ["app*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["../../tests/be"]
 asyncio_mode = "auto"
