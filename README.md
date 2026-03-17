@@ -113,6 +113,29 @@ npx vitest run --coverage
 
 ---
 
+## Database (Qdrant)
+
+Qdrant is the vector database used to store document embeddings. **No manual database setup is required** — everything is automatic:
+
+1. **`docker compose up -d`** starts an empty Qdrant server (v1.13.2) on ports 6333/6334. No collections or data exist yet.
+2. **On first upload or reindex**, the backend calls `init_collection()` which checks if the collection exists and creates it automatically with the correct vector dimensions and cosine distance metric.
+3. **Data persists** in the `data/qdrant/` directory (a Docker volume mount). This directory is gitignored, so each developer starts with a fresh database.
+4. **After a restart**, Qdrant reloads from `data/qdrant/` — no need to reindex unless you've deleted that directory.
+
+The collection name defaults to `rag_docs` and can be changed via the `QDRANT_COLLECTION` environment variable in `.env`.
+
+To **fully reset** the database, stop the container and delete the data directory:
+
+```bash
+docker compose down
+rm -rf data/qdrant
+docker compose up -d
+# Then reindex your documents
+bash scripts/reindex.sh
+```
+
+---
+
 ## How citations work
 
 When a document is indexed each text chunk is stored in Qdrant with metadata:
