@@ -1,4 +1,4 @@
-# bil-anacredit-rag-demo
+# rag-demo
 
 A minimal, well-engineered Retrieval-Augmented Generation (RAG) application.
 
