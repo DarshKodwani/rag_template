@@ -1,15 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ChatPanel } from "./ChatPanel";
+import { ChatPanel } from "@/components/ChatPanel";
 
 // Mock the API client
-vi.mock("../api/client", () => ({
+vi.mock("@/api/client", () => ({
   sendChat: vi.fn(),
   docUrl: vi.fn((path: string) => `http://localhost:8000${path}`),
 }));
 
-import { sendChat } from "../api/client";
+import { sendChat } from "@/api/client";
 const mockSendChat = vi.mocked(sendChat);
 
 describe("ChatPanel", () => {

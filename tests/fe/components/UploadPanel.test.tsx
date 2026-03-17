@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { UploadPanel } from "./UploadPanel";
+import { UploadPanel } from "@/components/UploadPanel";
 
-vi.mock("../api/client", () => ({
+vi.mock("@/api/client", () => ({
   uploadFile: vi.fn(),
   reindexAll: vi.fn(),
 }));
 
-import { uploadFile, reindexAll } from "../api/client";
+import { uploadFile, reindexAll } from "@/api/client";
 const mockUploadFile = vi.mocked(uploadFile);
 const mockReindexAll = vi.mocked(reindexAll);
 

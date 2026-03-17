@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CitationList } from "./CitationList";
-import type { Citation } from "../types";
+import { CitationList } from "@/components/CitationList";
+import type { Citation } from "@/types";
 
-vi.mock("../api/client", () => ({
+vi.mock("@/api/client", () => ({
   docUrl: vi.fn((path: string) => `http://localhost:8000${path}`),
 }));
 

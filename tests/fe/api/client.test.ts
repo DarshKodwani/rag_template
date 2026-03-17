@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { sendChat, reindexAll, uploadFile, docUrl } from "./client";
+import { sendChat, reindexAll, uploadFile, docUrl } from "@/api/client";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
