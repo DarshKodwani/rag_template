@@ -1,8 +1,19 @@
-# rag-demo
+# AnaGuide
 
-A minimal, well-engineered Retrieval-Augmented Generation (RAG) application.
+AnaCredit regulation assistant for BIL (Banque Internationale à Luxembourg), built on a Retrieval-Augmented Generation (RAG) architecture.
 
-**Stack:** Python 3.11+ / FastAPI · React + TypeScript (Vite) · Qdrant (Docker) · Azure OpenAI
+**Stack:** Python 3.13 / FastAPI · React 19 + TypeScript (Vite) · Qdrant (Docker) · OpenAI gpt-4o
+
+---
+
+## Features
+
+- **Chat with citations** — ask questions about AnaCredit regulation and get LLM answers grounded in your indexed documents, with inline source references
+- **Reasoning chain** — collapsible "reasoning" section shows the retrieval and generation steps behind each answer
+- **Document management** — upload PDF / DOCX / TXT files, view indexed documents, and reindex with streaming progress
+- **Feedback system** — thumbs up/down on every answer, stored in SQLite with an admin listing endpoint
+- **Benchmark framework** — 50-question ground truth set, automated scoring (ROUGE / keyword / LLM-judge), HTML dashboard
+- **Suggested prompts** — curated starter questions displayed on the landing page and in the chat panel
 
 ---
 
@@ -13,13 +24,13 @@ A minimal, well-engineered Retrieval-Augmented Generation (RAG) application.
 - Docker + Docker Compose
 - Python 3.11+
 - Node.js 18+
-- An Azure OpenAI (or OpenAI) API key
+- An OpenAI (or Azure OpenAI) API key
 
 ### 1. Configure environment
 
 ```bash
 cp .env.example .env
-# Edit .env and fill in your Azure OpenAI keys
+# Edit .env and set OPENAI_API_KEY (or Azure OpenAI keys)
 ```
 
 ### 2. Start everything
@@ -59,13 +70,17 @@ npm run dev
 
 ### Upload a document
 
-1. Open the frontend at http://localhost:5173.
-2. Use the **Upload** panel to select a PDF, DOCX, or TXT file.
+1. Open the frontend at http://localhost:5173 and navigate to **Manage Documents**.
+2. Select a PDF, DOCX, or TXT file and click **Upload & Index**.
 3. The file is saved to `documents/uploads/` and indexed automatically.
 
 ### Chat
 
-Type your question in the chat box. Each assistant response includes a **Sources** section listing the documents and page/section references used to generate the answer.
+Navigate to the **Chat** page. Type your question or select a suggested prompt. Each response includes:
+
+- A **Sources** panel with document citations (file, page/section, snippet)
+- A collapsible **Reasoning** section showing retrieval details
+- A **Feedback** button (👍/👎) to rate the answer
 
 ### Reindex all documents
 
@@ -89,9 +104,9 @@ source .venv/bin/activate
 pytest ../../tests/be/ --cov=app --cov-report=term-missing
 ```
 
-- **112 tests** across 13 test files
-- 100% statement coverage (519/519 statements)
-- Tests cover all API endpoints, loaders (PDF, DOCX, TXT), chunking, indexing, search, and vector store operations
+- **220 tests** across 17 test files
+- 100% statement coverage (898 statements)
+- Covers API endpoints, loaders, chunking, indexing, search, vector store, feedback, benchmarks, and citations
 
 ### Frontend tests
 
@@ -100,9 +115,9 @@ cd src/fe
 npm test
 ```
 
-- **41 tests** across 5 test files
+- **90 tests** across 7 test files
 - 100% coverage (statements, branches, functions, lines)
-- Tests cover all components (`ChatPanel`, `UploadPanel`, `CitationList`, `App`) and the API client
+- Covers all components, routing, API client, and user interactions
 
 To see a detailed coverage report:
 
@@ -117,20 +132,19 @@ npx vitest run --coverage
 
 Qdrant is the vector database used to store document embeddings. **No manual database setup is required** — everything is automatic:
 
-1. **`docker compose up -d`** starts an empty Qdrant server (v1.13.2) on ports 6333/6334. No collections or data exist yet.
-2. **On first upload or reindex**, the backend calls `init_collection()` which checks if the collection exists and creates it automatically with the correct vector dimensions and cosine distance metric.
-3. **Data persists** in the `data/qdrant/` directory (a Docker volume mount). This directory is gitignored, so each developer starts with a fresh database.
+1. **`docker compose up -d`** starts an empty Qdrant server (v1.13.2) on ports 6333/6334.
+2. **On first upload or reindex**, the backend calls `init_collection()` which creates the collection with the correct vector dimensions and cosine distance metric.
+3. **Data persists** in the `data/qdrant/` directory (a Docker volume mount). This directory is gitignored.
 4. **After a restart**, Qdrant reloads from `data/qdrant/` — no need to reindex unless you've deleted that directory.
 
-The collection name defaults to `rag_docs` and can be changed via the `QDRANT_COLLECTION` environment variable in `.env`.
+The collection name defaults to `documents` and can be changed via `QDRANT_COLLECTION` in `.env`.
 
-To **fully reset** the database, stop the container and delete the data directory:
+To **fully reset** the database:
 
 ```bash
 docker compose down
 rm -rf data/qdrant
 docker compose up -d
-# Then reindex your documents
 bash scripts/reindex.sh
 ```
 
@@ -150,29 +164,42 @@ When a document is indexed each text chunk is stored in Qdrant with metadata:
 | `end_offset` | Character end offset |
 | `text` | The chunk text itself |
 
-The chat endpoint returns a `citations` list alongside every answer. The frontend renders each citation with the source file name, page/section, and a short snippet.
+The chat endpoint returns a `citations` list alongside every answer. The frontend renders each citation with the source file, page/section, and a short snippet.
 
 ---
 
-## Adding new documents
+## Benchmarks
 
-Drop PDF, DOCX, or TXT files into the `documents/` folder and run reindex:
+A 50-question ground truth set is located in `benchmarks/ground_truth.json`. To run:
 
 ```bash
-bash scripts/reindex.sh
+cd src/be
+source .venv/bin/activate
+python -m app.benchmark.runner
 ```
+
+This produces `benchmarks/latest_report.json` and an HTML dashboard at `benchmarks/dashboard.html`. Scoring uses ROUGE-L, keyword overlap, and LLM-as-judge metrics.
+
+---
+
+## Feedback
+
+The `/feedback` API stores user ratings in SQLite (`data/feedback.db`). Endpoints:
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/feedback` | Submit a rating (up/down) with optional suggested answer |
+| GET | `/feedback` | List feedback entries with pagination and rating filter |
 
 ---
 
 ## Swapping the vector store
 
-The `VectorStore` abstract interface lives in `src/be/app/vectordb/base.py`. To swap Qdrant for another backend (e.g. **Oracle AI Vector Search**):
+The `VectorStore` abstract interface lives in `src/be/app/vectordb/base.py`. To swap Qdrant for another backend:
 
-1. Create a new file, e.g. `src/be/app/vectordb/oracle_store.py`, implementing `VectorStore`.
-2. Update the dependency in `src/be/app/main.py` to instantiate your new class.
+1. Create a new file implementing `VectorStore` (e.g. `oracle_store.py`).
+2. Update `src/be/app/main.py` to instantiate your new class.
 3. Add connection settings to `.env.example` and `config.py`.
-
-All other application code remains unchanged.
 
 ---
 
@@ -180,7 +207,7 @@ All other application code remains unchanged.
 
 | Problem | Solution |
 |---|---|
-| `Azure keys missing` error | Fill `AZURE_OPENAI_*` values in `.env` |
+| `LLM service not configured` | Set `OPENAI_API_KEY` (or Azure keys) in `.env` |
 | Qdrant connection refused | Run `docker compose up -d` |
 | Empty answers | Upload & reindex documents first |
 | Frontend can't reach backend | Ensure backend is running on port 8000 |
