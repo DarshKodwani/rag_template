@@ -25,7 +25,28 @@ export interface IngestResponse {
   errors: string[];
 }
 
+export interface DocumentInfo {
+  doc_name: string;
+  doc_id: string;
+  chunks: number;
+  pages?: number;
+  indexed_at: string;
+}
+
 /** A message as shown in the chat UI (may include citations). */
 export interface UIMessage extends ChatMessage {
   citations?: Citation[];
+}
+
+export interface FeedbackRequest {
+  query: string;
+  answer: string;
+  rating: "up" | "down";
+  suggested_answer?: string;
+  citations?: Citation[];
+}
+
+export interface FeedbackResponse {
+  id: number;
+  status: string;
 }
