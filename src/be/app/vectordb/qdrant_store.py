@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 class QdrantStore(VectorStore):
     def __init__(self, settings: "Settings") -> None:
         self._settings = settings
-        self._client = QdrantClient(url=settings.qdrant_url)
+        self._client = QdrantClient(url=settings.qdrant_url, timeout=10)
         self._collection = settings.qdrant_collection
 
     # ------------------------------------------------------------------
