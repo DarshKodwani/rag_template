@@ -43,6 +43,14 @@ documents/*.docx
 # Index run artifacts
 data/index_runs/
 
+# Runtime data
+data/feedback.db
+data/doc_registry.json
+
+# Benchmark generated outputs
+benchmarks/dashboard.html
+benchmarks/latest_report.json
+
 # IDE
 .vscode/
 .idea/
