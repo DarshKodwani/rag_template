@@ -5,17 +5,21 @@ import App from "@/App";
 describe("App", () => {
   it("renders the header", () => {
     render(<App />);
-    expect(screen.getByText("📄 RAG Demo")).toBeInTheDocument();
+    expect(screen.getByText("AnaGuide")).toBeInTheDocument();
+    expect(screen.getByAltText("BIL")).toBeInTheDocument();
   });
 
   it("renders the subtitle", () => {
     render(<App />);
-    expect(screen.getByText("RAG · Qdrant · FastAPI")).toBeInTheDocument();
+    expect(screen.getByText("Your AnaCredit regulation assistant")).toBeInTheDocument();
   });
 
-  it("renders ChatPanel and UploadPanel", () => {
+  it("renders the landing page by default", () => {
     render(<App />);
-    expect(screen.getByText("Chat")).toBeInTheDocument();
-    expect(screen.getByText("Documents")).toBeInTheDocument();
+    expect(
+      screen.getByText("What would you like to do?"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Ask AnaGuide")).toBeInTheDocument();
+    expect(screen.getByText("Manage Documents")).toBeInTheDocument();
   });
 });
