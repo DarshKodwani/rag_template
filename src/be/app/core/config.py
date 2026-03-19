@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # Retrieval
     top_k: int = 5
 
+    # LLM
+    llm_temperature: float = 0.15
+
     # Paths — can be overridden via environment variables
     documents_dir: Path = PROJECT_ROOT / "documents"
     data_dir: Path = PROJECT_ROOT / "data"
