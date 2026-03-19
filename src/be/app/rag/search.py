@@ -23,10 +23,12 @@ def _get_client(settings: "Settings"):
             azure_endpoint=settings.azure_openai_endpoint,
             api_key=settings.azure_openai_api_key,
             api_version=settings.azure_openai_api_version,
+            timeout=30.0,
         )
     return OpenAI(
         api_key=settings.openai_api_key,
         base_url=settings.openai_base_url,
+        timeout=30.0,
     )
 
 
@@ -57,7 +59,7 @@ def _chat_completion(
     response = client.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=0.0,
+        temperature=settings.llm_temperature,
     )
     return response.choices[0].message.content or ""
 
