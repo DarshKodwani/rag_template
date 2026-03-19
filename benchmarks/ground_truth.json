@@ -1,0 +1,402 @@
+[
+  {
+    "id": 1,
+    "question": "What is AnaCredit?",
+    "expected_answer": "AnaCredit is a dataset containing detailed information on individual bank loans in the euro area, collected by the European Central Bank (ECB) from national central banks (NCBs). It stands for 'analytical credit datasets' and aims to provide granular credit and credit risk data on an instrument-by-instrument basis.",
+    "type": "factual",
+    "source_pages": [5, 6, 7],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 2,
+    "question": "Who is the target audience of the AnaCredit Manual?",
+    "expected_answer": "The Manual is intended for reporting agents (credit institutions), data compilers and users of the AnaCredit database, as well as national authorities in charge of collecting the information as part of a broader national reporting framework.",
+    "type": "factual",
+    "source_pages": [5],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 3,
+    "question": "What is an institutional unit in the context of AnaCredit?",
+    "expected_answer": "An institutional unit is an economic entity characterised by decision-making autonomy in the exercise of its principal function. It must be entitled to own assets and incur liabilities on its own behalf, take on obligations and enter into contracts, and be able to draw up a complete set of accounts covering all transactions and a balance sheet of assets and liabilities.",
+    "type": "factual",
+    "source_pages": [12],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 4,
+    "question": "What is the definition of a foreign branch in AnaCredit?",
+    "expected_answer": "A foreign branch is an institutional unit which is a legally dependent part of a legal entity resident in a different country. It is defined in accordance with the concept of a 'single branch' referred to in Article 2(3) of Regulation (EC) No 2533/98. A credit institution can have only one foreign branch in a given country.",
+    "type": "factual",
+    "source_pages": [15, 44],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 5,
+    "question": "What is the difference between the reporting population and the reference population?",
+    "expected_answer": "AnaCredit distinguishes between reporting agents (the reporting population) and observed agents (the reference population). Reporting agents are the entities that submit data to NCBs. Observed agents are the entities whose credit activities are being reported. A reporting agent reports data about the instruments held by its observed agents.",
+    "type": "factual",
+    "source_pages": [17, 21],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 6,
+    "question": "Which entities are required to report under AnaCredit?",
+    "expected_answer": "Under Article 3 of the AnaCredit Regulation, the following entities are subject to reporting requirements: (a) credit institutions under Article 4(1)(1) of the CRR resident in a reporting Member State, and (b) foreign branches of credit institutions provided that the foreign branches are resident in a reporting Member State.",
+    "type": "factual",
+    "source_pages": [19],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 7,
+    "question": "What is the domestic part of a credit institution?",
+    "expected_answer": "The domestic part of a credit institution is an institutional unit comprising the headquarters and the domestic branch offices. In the context of AnaCredit, the domestic part of a credit institution and its head office undertaking use the same counterparty identifier.",
+    "type": "factual",
+    "source_pages": [13],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 8,
+    "question": "What is the reporting threshold for AnaCredit?",
+    "expected_answer": "The reporting threshold for AnaCredit is EUR 25,000. It is based on the debtor's commitment amount, meaning the sum of the outstanding nominal amount and off-balance-sheet amount of all instruments of the debtor vis-à-vis the observed agent.",
+    "type": "factual",
+    "source_pages": [85],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 9,
+    "question": "What is the role of a servicer in AnaCredit?",
+    "expected_answer": "A servicer is a counterparty that has the overall responsibility for the administrative management of an instrument, including its collection and recovery. This means the institution that is responsible for day-to-day management including collecting principal and interest payments, even if that institution does not have any decision-making power in respect of the instrument being serviced.",
+    "type": "factual",
+    "source_pages": [40],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 10,
+    "question": "What is a creditor in the context of AnaCredit?",
+    "expected_answer": "A creditor is the counterparty bearing the credit risk of an instrument, essentially the party that has the right to receive payment from the debtor. The creditor may be either an on-balance-sheet asset holder or an off-balance-sheet exposure holder, depending on the accounting standard applied.",
+    "type": "factual",
+    "source_pages": [50, 57],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 11,
+    "question": "What is the difference between a debtor and a protection provider?",
+    "expected_answer": "A debtor is the counterparty which has the unconditional obligation to make repayments under the instrument. A protection provider is a party that pledges assets or provides guarantees to protect the creditor. The protection provider is only liable if the debtor fails to meet its payment obligation — the creditor does not have the right to seize pledged assets unless the debtor defaults.",
+    "type": "factual",
+    "source_pages": [42],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 12,
+    "question": "How does AnaCredit handle the reporting structure of the Manual?",
+    "expected_answer": "The AnaCredit Manual is structured in three parts: Part I (General Methodology) describes the general framework, Part II describes all datasets and data attributes in detail and provides specific reporting instructions, and Part III provides additional practical guidance on specific topics.",
+    "type": "factual",
+    "source_pages": [7, 9],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 13,
+    "question": "What is the counterparty entity in AnaCredit?",
+    "expected_answer": "The counterparty entity contains information about counterparties related to the instrument entity and, if relevant, to the protection entity. It also contains information about certain counterparties affiliated with debtors and protection providers, including their identifiers, risk information, and default status.",
+    "type": "factual",
+    "source_pages": [96, 113],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 14,
+    "question": "What is the primary key concept in AnaCredit entity tables?",
+    "expected_answer": "The primary key is a combination of one or more identifiers that uniquely identifies one occurrence (record) in an entity table. From the reporting agent's perspective, different combinations of identifiers form the primary keys of different entity tables.",
+    "type": "factual",
+    "source_pages": [105],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 15,
+    "question": "How is the instrument-protection received relationship modelled in AnaCredit?",
+    "expected_answer": "The instrument-protection received entity table links instruments with the protection items securing them. One record links exactly one instrument record with one protection received record. If an instrument is secured by several protection items, there are multiple records for that instrument. Conversely, if one protection item secures several instruments, there are multiple records for that protection item.",
+    "type": "factual",
+    "source_pages": [111, 120],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 16,
+    "question": "What is the counterparty-instrument dataset in AnaCredit?",
+    "expected_answer": "The counterparty-instrument entity table links counterparties with instruments. Multiple counterparties may be linked with a single instrument if there are, for instance, multiple debtors. All non-natural person counterparties are identified and recorded along with the roles they take in relation to the instrument.",
+    "type": "factual",
+    "source_pages": [110, 35],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 17,
+    "question": "What is the purpose of the counterparty risk/default entity table?",
+    "expected_answer": "The counterparty risk/default entity table is divided into two datasets: the counterparty risk dataset and the counterparty default dataset. It records the probability of default (PD) and default status of counterparties that are debtors of instruments or financial guarantee providers.",
+    "type": "factual",
+    "source_pages": [128, 135],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 18,
+    "question": "What does extended quarter-end reporting mean?",
+    "expected_answer": "Extended quarter-end reporting means that instruments must continue to be reported until at least the end of the quarter in which the debtor's commitment amount falls below the EUR 25,000 reporting threshold. This ensures that instruments that change from qualifying to not qualifying during a quarter are still captured in AnaCredit for that quarter.",
+    "type": "factual",
+    "source_pages": [85, 91],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 19,
+    "question": "What is the parent undertaking concept in AnaCredit?",
+    "expected_answer": "A parent undertaking has the same meaning as defined in Article 4(1)(15)(a) of the CRR. AnaCredit records the immediate parent undertaking and the ultimate parent undertaking. The ultimate parent is the legal entity at the top of the ownership chain of the counterparty.",
+    "type": "factual",
+    "source_pages": [45, 130],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 20,
+    "question": "What is the logical data model of AnaCredit?",
+    "expected_answer": "AnaCredit's logical data model consists of several entity tables including the instrument entity, counterparty entity, counterparty-instrument entity, protection received entity, instrument-protection received entity, and counterparty risk/default entity table. The entities describe instruments, the counterparties involved, and the protection items securing them.",
+    "type": "factual",
+    "source_pages": [93, 96],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 21,
+    "question": "What is a synthetic securitisation in the context of AnaCredit?",
+    "expected_answer": "A synthetic securitisation involves the transfer of the credit risk of an instrument (or pool of instruments, or part thereof) through the use of credit derivatives, guarantees or any similar mechanism to the investors in financing instruments issued by an FVC. FVCs in this category may not fund the instruments whose credit risk is being transferred.",
+    "type": "factual",
+    "source_pages": [43],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 22,
+    "question": "What types of instruments trigger reporting obligations in AnaCredit?",
+    "expected_answer": "Reporting obligations are triggered by instruments in relation to which the observed agent acts as creditor (always reportable) or as servicer (reportable only if certain conditions apply). The instrument must be subject to credit risk, meaning the creditor may not receive full payment from the debtor.",
+    "type": "factual",
+    "source_pages": [47, 52, 54],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 23,
+    "question": "What happens when a guarantee is called upon?",
+    "expected_answer": "When a guarantee is called upon, for example when a debtor fails to meet its payment obligation, the guarantee becomes a loan for which the guarantor bank acts as creditor (as it now has the right to receive payment from the original debtor). This transformed instrument is then reported by the bank in its capacity as an observed agent.",
+    "type": "factual",
+    "source_pages": [64],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 24,
+    "question": "What data attributes are included in the accounting dataset?",
+    "expected_answer": "The accounting dataset includes attributes such as provisions associated with off-balance-sheet exposures, status of forbearance and renegotiation, date of the forbearance and renegotiation status, cumulative recoveries since default, prudential portfolio, and the performing status of the instrument.",
+    "type": "factual",
+    "source_pages": [112],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 25,
+    "question": "What are the criteria triggering reporting as of a reporting reference date?",
+    "expected_answer": "Reporting agents are required to report a certain set of information valid as of a given reporting reference date relating to instruments held by their observed agents. The criteria include the instrument being eligible based on its type and the applicable conditions (Conditions A, B, and C which are checked for each instrument).",
+    "type": "factual",
+    "source_pages": [72, 78],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 26,
+    "question": "What is a credit cross-limit structure in AnaCredit?",
+    "expected_answer": "A credit cross-limit structure (such as a multi-product credit facility) involves multiple instruments linked to a single credit arrangement. Guidance on reporting these is provided in Part III of the Manual. Instruments that are off-balance-sheet items with an intrinsic off-balance-sheet amount and zero outstanding may still need to be reported.",
+    "type": "factual",
+    "source_pages": [65],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 27,
+    "question": "How are instruments classified for AnaCredit reporting eligibility?",
+    "expected_answer": "Instruments are first classified according to the appropriate type of instrument. Then Conditions A, B and C are checked one by one. Finally, the instruments are classified as either eligible or not eligible based on the outcome of these checks. Not all banking products necessarily share the same characteristics.",
+    "type": "factual",
+    "source_pages": [78],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 28,
+    "question": "What is the reporting context in AnaCredit?",
+    "expected_answer": "The reporting context is part of the primary key in several entity tables. It identifies the specific framework under which data is reported, helping distinguish between different reporting perspectives for the same instrument or counterparty.",
+    "type": "factual",
+    "source_pages": [103, 105],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 29,
+    "question": "What countries and territories are subject to AnaCredit reporting for France?",
+    "expected_answer": "For France, territories including Guadeloupe, French Guiana, Martinique, Mayotte, la Réunion and Saint-Martin are considered part of the relevant reporting Member State and are therefore subject to AnaCredit reporting. AnaCredit does not apply in countries and territories of Annex II to the TFEU.",
+    "type": "factual",
+    "source_pages": [18],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 30,
+    "question": "What information do Q&As published by the ECB provide?",
+    "expected_answer": "The ECB publishes Q&As on its website on an ongoing basis. These Q&As provide additional guidance to clarify the AnaCredit reporting requirements and complement the Manual. They should be considered in line with the national reporting framework if applicable.",
+    "type": "factual",
+    "source_pages": [9],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 31,
+    "question": "A debtor's total commitment amount has dropped below EUR 25,000 mid-quarter. What should the reporting agent do?",
+    "expected_answer": "The reporting agent must continue reporting the instrument until at least the end of the current quarter (extended quarter-end reporting). This means the instrument remains reportable through the quarter in which the threshold was breached. Reporting ceases from the next quarter if the amount remains below the threshold.",
+    "type": "reasoning",
+    "source_pages": [85, 91],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 32,
+    "question": "A credit institution headquartered in Germany has a foreign branch in France. Who reports the data for the French branch's lending activities?",
+    "expected_answer": "The foreign branch in France, being an institutional unit resident in a reporting Member State, reports its own data to the Banque de France (the NCB of the Member State where it is located). The domestic part of the credit institution in Germany separately reports its own activities to the Bundesbank.",
+    "type": "reasoning",
+    "source_pages": [21, 27, 28],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 33,
+    "question": "An observed agent acts only as servicer of a loan but not as creditor. Is this instrument reportable under AnaCredit?",
+    "expected_answer": "Instruments where the observed agent acts only as servicer (but not as creditor) are not automatically reportable. They are subject to AnaCredit reporting only if certain additional conditions apply. Instruments where the observed agent acts as creditor are always reportable, but servicer-only instruments trigger reporting only under specific circumstances.",
+    "type": "reasoning",
+    "source_pages": [52, 54],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 34,
+    "question": "A bank issued a guarantee for a company. The company defaults and the bank pays the guarantee. How is this reported in AnaCredit?",
+    "expected_answer": "When the guarantee is called upon, it effectively becomes a loan for which the bank now acts as creditor (since the bank now has the right to receive payment from the defaulting company). The instrument must be reported by the bank in its role as an observed agent, classified as 'other loans' according to the Manual.",
+    "type": "reasoning",
+    "source_pages": [64],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 35,
+    "question": "A subsidiary in Italy of a German parent bank has a foreign branch also in Italy. Who reports the Italian branch's data?",
+    "expected_answer": "The subsidiary in Italy is not a reporting agent for the foreign branch in Italy. The subsidiary's own domestic part together with the subsidiary's foreign branches (the observed agent) would report its credit activities. The reporting obligations depend on whether the branch is considered part of the subsidiary or a separate institutional unit.",
+    "type": "reasoning",
+    "source_pages": [30],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 36,
+    "question": "An instrument is recorded on the liabilities side of the balance sheet. Is it reportable under AnaCredit?",
+    "expected_answer": "Instruments that are recorded on the liabilities side of the balance sheet are generally not reportable under AnaCredit. In accordance with the Manual, AnaCredit focuses on instruments where the observed agent has a credit exposure, meaning instruments on the assets side or off-balance-sheet items.",
+    "type": "reasoning",
+    "source_pages": [62],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 37,
+    "question": "An instrument was written off during the current quarter. Should it still be reported?",
+    "expected_answer": "Yes. Extended quarter-end reporting applies, meaning instruments that have been written off during the quarter must still be reported until at least the end of that quarter. This extended reporting is of particular relevance for written-off instruments and is aimed at capturing the total write-off amount via the accounting dataset as of the quarter-end.",
+    "type": "reasoning",
+    "source_pages": [85],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 38,
+    "question": "A debtor has multiple instruments with different observed agents. How is the probability of default (PD) reported?",
+    "expected_answer": "The PD and default status reported for a counterparty must be identical across different observed agents. The counterparty risk/default entity table records this information, and the PD reported in relation to a given debtor counterparty must be consistent regardless of which observed agent is reporting.",
+    "type": "reasoning",
+    "source_pages": [128],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 39,
+    "question": "A single protection item secures three different instruments. How is this modelled in AnaCredit?",
+    "expected_answer": "There would be three records in the instrument-protection received entity table — one for each instrument-protection pair. Each record links exactly one instrument with the same protection received item. This many-to-many relationship is explicitly modelled through multiple records in this entity table.",
+    "type": "reasoning",
+    "source_pages": [111, 120],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 40,
+    "question": "A loan has three debtors (joint borrowers). How are they represented in AnaCredit?",
+    "expected_answer": "All three debtors are linked to the single instrument via the counterparty-instrument entity table. There would be three records in this table, each linking one of the debtor counterparties to the same instrument, along with the role they take (debtor). All non-natural person counterparties are identified and recorded with their respective roles.",
+    "type": "reasoning",
+    "source_pages": [35, 110],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 41,
+    "question": "A trustee holds instruments on behalf of an investor. The investor is a credit institution in a reporting Member State. Who reports the instrument — the trustee or the investor?",
+    "expected_answer": "If the investor (trustor) is a credit institution or foreign branch of a credit institution resident in a reporting Member State, the instrument is not required to be reported by the reporting agent related to the observed agent (the trustee). The reporting obligation depends on whether the trustee or the investor bears the credit risk.",
+    "type": "reasoning",
+    "source_pages": [60],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 42,
+    "question": "How should a reporting agent determine whether an instrument is eligible for AnaCredit reporting?",
+    "expected_answer": "The reporting agent should first classify the instrument according to its type. Then check Conditions A, B and C sequentially. Based on the outcome of these checks, the instrument is classified as either eligible or not eligible. The Manual provides decision trees and flow charts to assist with this classification process.",
+    "type": "reasoning",
+    "source_pages": [72, 78],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 43,
+    "question": "An instrument ceased to qualify for AnaCredit reporting on 15 November 2018. When is the last reporting date?",
+    "expected_answer": "Since the instrument ceased qualifying during Q4 2018, it must be reported until at least the end of that quarter under the extended quarter-end reporting rule. The last reporting reference date would be 31 December 2018. From the next quarter (Q1 2019), the instrument is no longer reported.",
+    "type": "reasoning",
+    "source_pages": [91],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 44,
+    "question": "Does AnaCredit report information on an instrument-by-instrument basis or on an aggregated basis?",
+    "expected_answer": "AnaCredit requires granular information about contracts on an instrument-by-instrument (commonly referred to as loan-by-loan) basis. This is one of the key features of AnaCredit — it collects data at the individual instrument level rather than in aggregated form.",
+    "type": "factual",
+    "source_pages": [93],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 45,
+    "question": "What are the datasets that make up the AnaCredit reporting framework?",
+    "expected_answer": "The AnaCredit reporting framework consists of several datasets including: the instrument dataset, the counterparty-instrument dataset, the counterparty risk dataset, the counterparty default dataset, the instrument-protection received dataset, the protection received dataset, and the accounting dataset, among others.",
+    "type": "factual",
+    "source_pages": [135],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 46,
+    "question": "A reporting agent discovers that a data attribute changed on 22 October. The next reporting reference date is 31 December. When should the change be reported?",
+    "expected_answer": "Changes to data attributes are reported as of the reporting reference date. The reporting agent would report the updated value as of 31 December (the next reporting reference date), reflecting the change that occurred on 22 October. The timeliness of reporting follows the rules specified in the Manual.",
+    "type": "reasoning",
+    "source_pages": [140, 143],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 47,
+    "question": "What determines whether a foreign branch must report to AnaCredit?",
+    "expected_answer": "A foreign branch must report to AnaCredit if it is resident in a reporting Member State. If the foreign branch is located in a reporting Member State, it reports data to the NCB of that Member State. The foreign branch appears in the dual role of observed agent and reporting agent.",
+    "type": "factual",
+    "source_pages": [21, 27],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 48,
+    "question": "Can a reporting agent apply derogations under AnaCredit?",
+    "expected_answer": "Yes, the AnaCredit Regulation provides for the application of derogations for small reporting agents. The Manual presents the baseline requirements assuming that neither derogations nor additional requirements apply, but NCBs may grant derogations to certain reporting agents based on their size or other criteria.",
+    "type": "factual",
+    "source_pages": [7],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 49,
+    "question": "Two observed agents hold instruments against the same debtor. Should the counterparty data be consistent across reports?",
+    "expected_answer": "Yes. Counterparty reference data and risk/default data must be consistent across different observed agents. The probability of default and default status reported for a given counterparty must be identical regardless of which observed agent's perspective is being reported. This ensures data consistency in the AnaCredit database.",
+    "type": "reasoning",
+    "source_pages": [128],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  },
+  {
+    "id": 50,
+    "question": "How does AnaCredit determine whether certain conditions need to be checked for a specific data attribute?",
+    "expected_answer": "It is necessary to determine whether any of the four conditions referred to in the timeliness/applicability tables are fulfilled for the data attribute in question. These conditions govern whether a given data attribute must be reported, can be left blank, or follows specific rules based on the instrument type or counterparty characteristics.",
+    "type": "reasoning",
+    "source_pages": [149],
+    "source_doc": "AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf"
+  }
+]
