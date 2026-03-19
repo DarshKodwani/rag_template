@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import chat, health, ingest
+from app.api import chat, feedback, health, ingest
 from app.core.logging import configure_logging
 
 configure_logging()
@@ -22,7 +22,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -40,3 +40,4 @@ app.mount("/documents", StaticFiles(directory=str(_DOCUMENTS_DIR)), name="docume
 app.include_router(health.router)
 app.include_router(chat.router)
 app.include_router(ingest.router)
+app.include_router(feedback.router)
