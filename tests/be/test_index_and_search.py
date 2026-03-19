@@ -24,6 +24,7 @@ from app.rag.indexing import (
     _index_chunks,
     index_file,
     index_directory,
+    index_directory_iter,
 )
 
 
@@ -344,6 +345,41 @@ class TestIndexDirectory:
             result = index_directory(settings)
 
         assert result.status == "partial"
+
+
+class TestIndexDirectoryIter:
+    def test_yields_start_progress_done(self, tmp_path):
+        docs = tmp_path / "documents"
+        docs.mkdir()
+        (docs / "a.txt").write_text("hello world")
+
+        settings = _fake_settings(tmp_path)
+        settings.documents_dir = docs
+        settings.any_keys_present = True
+
+        fake_vector = [0.1] * 4
+        with (
+            patch("app.rag.indexing._embed", return_value=[fake_vector]),
+            patch("app.rag.indexing.QdrantStore") as mock_store_cls,
+        ):
+            mock_store = MagicMock()
+            mock_store_cls.return_value = mock_store
+            events = list(index_directory_iter(settings))
+
+        assert events[0]["type"] == "start"
+        assert events[0]["total"] == 1
+        assert events[1]["type"] == "progress"
+        assert events[1]["doc_name"] == "a.txt"
+        assert events[-1]["type"] == "done"
+        assert events[-1]["indexed"] >= 1
+
+    def test_yields_error_when_no_keys(self, tmp_path):
+        settings = _fake_settings(tmp_path)
+        settings.any_keys_present = False
+
+        events = list(index_directory_iter(settings))
+        assert len(events) == 1
+        assert events[0]["type"] == "error"
 
 
 # ---------------------------------------------------------------------------

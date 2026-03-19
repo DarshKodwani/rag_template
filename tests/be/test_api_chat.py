@@ -39,8 +39,8 @@ class TestChatEndpoint:
         with patch("app.api.chat.get_settings", return_value=fake_settings):
             resp = client.post("/chat", json={"message": "hello"})
 
-        assert resp.status_code == 500
-        assert "API keys missing" in resp.json()["detail"]
+        assert resp.status_code == 503
+        assert "not configured" in resp.json()["detail"]
 
     def test_chat_exception_returns_500(self, client):
         fake_settings = MagicMock()
@@ -53,4 +53,4 @@ class TestChatEndpoint:
             resp = client.post("/chat", json={"message": "hello"})
 
         assert resp.status_code == 500
-        assert "boom" in resp.json()["detail"]
+        assert resp.json()["detail"] == "Chat query failed"
