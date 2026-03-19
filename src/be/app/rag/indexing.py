@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from app.core.models import Chunk, IngestResponse
 from app.rag.chunking import check_complex_doc, iter_chunks_with_offsets
+from app.rag.registry import clear_registry, register_document
 from app.vectordb.qdrant_store import QdrantStore
 
 if TYPE_CHECKING:
@@ -24,7 +25,7 @@ _SUPPORTED = {".pdf", ".docx", ".txt"}
 
 
 def _doc_id(path: Path) -> str:
-    return hashlib.md5(str(path).encode()).hexdigest()
+    return hashlib.sha256(str(path).encode()).hexdigest()
 
 
 def _chunk_id(doc_id: str, index: int) -> str:
@@ -40,10 +41,12 @@ def _get_embedding_client(settings: "Settings"):
             azure_endpoint=settings.azure_openai_endpoint,
             api_key=settings.azure_openai_api_key,
             api_version=settings.azure_openai_api_version,
+            timeout=60.0,
         )
     return OpenAI(
         api_key=settings.openai_api_key,
         base_url=settings.openai_base_url,
+        timeout=60.0,
     )
 
 
@@ -184,6 +187,13 @@ def index_file(path: Path, settings: "Settings") -> IngestResponse:
         _index_chunks(chunks, settings)
         indexed = len(chunks)
         log.info("Indexed %d chunks from %s", indexed, path.name)
+        if indexed:
+            register_document(
+                settings.data_dir,
+                doc_name=path.name,
+                doc_id=doc_id,
+                chunks=indexed,
+            )
     except Exception as exc:
         log.exception("Failed to index %s", path)
         errors.append(f"{path.name}: {exc}")
@@ -208,6 +218,8 @@ def index_directory(settings: "Settings") -> IngestResponse:
     paths = [p for p in docs_dir.rglob("*") if p.suffix.lower() in _SUPPORTED]
     log.info("Found %d document(s) to index in %s", len(paths), docs_dir)
 
+    clear_registry(settings.data_dir)
+
     total_indexed = 0
     all_errors: list[str] = []
 
@@ -221,3 +233,37 @@ def index_directory(settings: "Settings") -> IngestResponse:
         indexed=total_indexed,
         errors=all_errors,
     )
+
+
+def index_directory_iter(settings: "Settings"):
+    """Generator that yields SSE-friendly progress dicts while indexing."""
+    if not settings.any_keys_present:
+        yield {"type": "error", "message": "API keys missing."}
+        return
+
+    docs_dir = settings.documents_dir
+    paths = [p for p in docs_dir.rglob("*") if p.suffix.lower() in _SUPPORTED]
+    total = len(paths)
+
+    yield {"type": "start", "total": total}
+    clear_registry(settings.data_dir)
+
+    total_indexed = 0
+    all_errors: list[str] = []
+
+    for i, path in enumerate(paths, 1):
+        yield {
+            "type": "progress",
+            "current": i,
+            "total": total,
+            "doc_name": path.name,
+        }
+        result = index_file(path, settings)
+        total_indexed += result.indexed
+        all_errors.extend(result.errors)
+
+    yield {
+        "type": "done",
+        "indexed": total_indexed,
+        "errors": all_errors,
+    }
