@@ -170,7 +170,7 @@ describe("DocumentsPage", () => {
 
   it("starts reindex with SSE and shows progress", async () => {
     const user = userEvent.setup();
-    mockReindexStream.mockImplementation((onEvent, onDone) => {
+    mockReindexStream.mockImplementation((onEvent: (e: Record<string, unknown>) => void, onDone: () => void) => {
       onEvent({ type: "start", total: 2 });
       onEvent({
         type: "progress",
@@ -193,7 +193,7 @@ describe("DocumentsPage", () => {
 
   it("handles reindex SSE error event", async () => {
     const user = userEvent.setup();
-    mockReindexStream.mockImplementation((onEvent, onDone) => {
+    mockReindexStream.mockImplementation((onEvent: (e: Record<string, unknown>) => void, onDone: () => void) => {
       onEvent({ type: "error", message: "API keys missing." });
       onDone();
       return () => {};
@@ -209,7 +209,7 @@ describe("DocumentsPage", () => {
 
   it("handles reindex stream failure", async () => {
     const user = userEvent.setup();
-    mockReindexStream.mockImplementation((_onEvent, _onDone, onError) => {
+    mockReindexStream.mockImplementation((_onEvent: unknown, _onDone: unknown, onError: (err: string) => void) => {
       onError("Connection lost");
       return () => {};
     });
@@ -224,7 +224,7 @@ describe("DocumentsPage", () => {
 
   it("shows done errors in status", async () => {
     const user = userEvent.setup();
-    mockReindexStream.mockImplementation((onEvent, onDone) => {
+    mockReindexStream.mockImplementation((onEvent: (e: Record<string, unknown>) => void, onDone: () => void) => {
       onEvent({ type: "done", indexed: 5, errors: ["bad file"] });
       onDone();
       return () => {};

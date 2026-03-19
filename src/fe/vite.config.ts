@@ -41,6 +41,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: path.resolve(repoRoot, 'tests', 'fe', 'setup.ts'),
     include: [path.resolve(repoRoot, 'tests', 'fe', '**', '*.test.{ts,tsx}')],
+    exclude: [path.resolve(repoRoot, 'tests', 'fe', 'node_modules', '**')],
     css: true,
   },
 })

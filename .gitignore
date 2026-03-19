@@ -27,6 +27,7 @@ coverage.xml
 
 # Node / Frontend
 node_modules/
+tests/fe/node_modules
 src/fe/dist/
 src/fe/.vite/
 src/fe/node_modules/
