@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" width="200" height="230">
+  <!-- Top swooping arc (signature BIL detail) -->
+  <path d="M 20 50 Q 20 10, 100 5 Q 180 0, 190 25" fill="none" stroke="#7B2382" stroke-width="8" stroke-linecap="round"/>
+  <!-- Shield body -->
+  <path d="
+    M 25 45
+    L 25 125
+    Q 25 170, 65 195
+    L 100 215
+    L 135 195
+    Q 175 170, 175 125
+    L 175 30
+    Q 100 15, 25 45 Z
+  " fill="none" stroke="#7B2382" stroke-width="8" stroke-linejoin="round"/>
+  <!-- Checkmark swoosh at bottom-right of shield -->
+  <path d="M 100 215 Q 115 210, 140 190 Q 175 165, 178 125 L 178 30" fill="none" stroke="#7B2382" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- BIL text -->
+  <text x="100" y="145" font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-size="70" font-weight="900" fill="#7B2382" text-anchor="middle">BIL</text>
+  <!-- 1856 text -->
+  <text x="70" y="228" font-family="'Helvetica Neue',Arial,sans-serif" font-size="24" font-weight="700" fill="#7B2382" text-anchor="middle" letter-spacing="2">1856</text>
+</svg>
