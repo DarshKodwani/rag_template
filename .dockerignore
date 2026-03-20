@@ -1,0 +1,13 @@
+.git
+.venv
+__pycache__
+*.pyc
+node_modules
+data/qdrant
+data/feedback.db
+tests
+*.egg-info
+.pytest_cache
+.coverage
+htmlcov
+dist
